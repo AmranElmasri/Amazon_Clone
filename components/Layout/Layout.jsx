@@ -43,7 +43,7 @@ const Layout = ({ title, description, children }) => {
         <CssBaseline />
 
         <Navbra />
-        <Container component="main" sx={{minHeight:"80vh"}}>
+        <Container component="main" sx={{minHeight:"80vh", marginTop: "2rem"}}>
           {children}
         </Container>
         <Footer />

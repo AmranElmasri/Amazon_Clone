@@ -1,14 +1,34 @@
-import { Typography } from '@mui/material'
+import { Alert, CircularProgress, Grid, Typography } from '@mui/material'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import ProductItem from '../components/ProductItem/ProductItem'
+import { fetchProducts } from '../store/slices/productSlice'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
+  const { products, isLoading, error } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchProducts());
+
+  }, [dispatch]);
+
   return (
     <>
-      <Typography component="h1" variant="h1">
-        Sanity Amazona
-      </Typography>
+      {isLoading ? <CircularProgress />
+        : error ? <Alert variant="danger">{error}</Alert>
+          :
+          <Grid container spacing={3}>
+            {products.map((product) => (
+            <Grid item xs={12} sm={6} md={4} key={product.slug}>
+              <ProductItem product={product} />
+            </Grid>
+            ))}
+          </Grid>
+      }
     </>
   )
 }

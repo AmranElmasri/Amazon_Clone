@@ -1,12 +1,22 @@
-import React from 'react'
+import React from 'react';
 import { createTheme } from '@mui/material/styles';
 import Head from 'next/head';
-import { AppBar, Container, CssBaseline, ThemeProvider, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Container,
+  CssBaseline,
+  ThemeProvider,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import Link from 'next/link';
 import Navbra from '../Navbar/Navbra';
 import Footer from '../Footer/Footer';
+import { useSelector } from 'react-redux';
 
 const Layout = ({ title, description, children }) => {
+  const { darkMode } = useSelector((state) => state.product);
+
 
   const theme = createTheme({
     // typography: {
@@ -22,7 +32,7 @@ const Layout = ({ title, description, children }) => {
     //   },
     // },
     palette: {
-      mode: 'light',
+      mode: darkMode ? 'dark' : 'light',
       primary: {
         main: '#f0c000',
       },
@@ -43,15 +53,16 @@ const Layout = ({ title, description, children }) => {
         <CssBaseline />
 
         <Navbra />
-        <Container component="main" sx={{minHeight:"80vh", marginTop: "2rem"}}>
+        <Container
+          component="main"
+          sx={{ minHeight: '80vh', marginTop: '2rem' }}
+        >
           {children}
         </Container>
         <Footer />
-
       </ThemeProvider>
-
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

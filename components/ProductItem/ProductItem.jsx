@@ -1,35 +1,68 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography } from '@mui/material'
+import {
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Rating,
+  Typography,
+} from '@mui/material';
+import { Box } from '@mui/system';
 import Link from 'next/link';
 import React from 'react';
-import {urlForThumbnail} from "../../utils/image"
+import { urlForThumbnail } from '../../utils/image';
 
 const ProductItem = ({ product }) => {
   return (
-    <Card>
-      <Link href={'/'} passHref>
+    <Card elevation={2}>
+      <Link href={`/product/${product.slug.current}`} passHref>
         <CardActionArea>
           <CardMedia
             component="img"
             image={urlForThumbnail(product.image)}
             title={product.name}
-          >
-          </CardMedia>
+            sx={{ height: '200px' }}
+          ></CardMedia>
           <CardContent>
             <Typography>{product.name}</Typography>
-            <Typography>
-              {product.rating} ({product.numReviews} reviews)
-            </Typography>
+            <Rating value={product.rating} readOnly></Rating>
           </CardContent>
         </CardActionArea>
       </Link>
-      <CardActions>
-        <Typography>${product.price}</Typography>
-        <Button size="small" color="primary">
-          Add to cart
-        </Button>
+      <CardActions
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginLeft: '10px',
+          }}
+        >
+          <Typography>${product.price}</Typography>
+          <Button
+            sx={{ marginLeft: '20px' }}
+            size="small"
+            color="primary"
+            variant="outlined"
+          >
+            Add to cart
+          </Button>
+        </Box>
+        <Link href={`/product/${product.slug.current}`}>
+          <Button sx={{ marginLeft: '20px' }} size="small" color="primary">
+            show more
+          </Button>
+        </Link>
       </CardActions>
     </Card>
-  )
-}
+  );
+};
 
 export default ProductItem;

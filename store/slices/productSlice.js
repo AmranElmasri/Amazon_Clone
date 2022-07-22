@@ -6,6 +6,8 @@ const initialState = {
   products: [],
   product: [],
   error: '',
+  darkMode: null
+
 }
 
 export const fetchProducts = createAsyncThunk('product/fetchProducts', async (_, thunkAPI) => {
@@ -65,8 +67,14 @@ export const productSlice = createSlice({
           state.error = action.payload;
 
       })
+  },
+  reducers: {
+    setDarkMode: (state, action) => {
+      state.darkMode = action.payload;
+      localStorage.setItem('darkMode', JSON.stringify(state.darkMode));
+    }
   }
 })
 
-// export const { } = productSlice.actions;
+export const { setDarkMode } = productSlice.actions;
 export default productSlice.reducer;    

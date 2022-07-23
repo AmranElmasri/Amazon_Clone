@@ -10,12 +10,15 @@ import {
   Rating,
   Typography,
 } from '@mui/material';
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProductDetails } from '../../store/slices/productSlice';
-import { urlFor } from '../../utils/image';
+import { getProductDetails, setAddToCart } from '../../store/slices/productSlice';
+import { urlFor, urlForThumbnail } from '../../utils/image';
+import { useSnackbar } from 'notistack';
+
 
 export const getServerSideProps = (context) => {
   return {
@@ -25,12 +28,41 @@ export const getServerSideProps = (context) => {
 
 const ProductDetails = (props) => {
   const { slug } = props;
-  const { product, isLoading, error } = useSelector((state) => state.product);
+  const { product, isLoading, error, cartItems } = useSelector((state) => state.product);
   const dispatch = useDispatch();
-
+  const { enqueueSnackbar } = useSnackbar();
+  
   useEffect(() => {
     dispatch(getProductDetails(slug));
   }, [dispatch, slug]);
+
+  const handleAddToCard = async () => {
+    
+    const existItem = cartItems.find((item) => item._id === product._id);
+    const quantity = existItem ? existItem.quantity +1 : 1 ;
+
+    const {data} = await axios.get(`/product/${product._id}`);
+
+    if(data.countInStock < quantity){
+      enqueueSnackbar('Sorry. Product is out of stock', { variant: 'error' });
+      return;
+    }
+
+    const newData = {
+      _key: product._id,
+      name: product.name,
+      countInStock: product.countInStock,
+      slug: product.slug.current,
+      price: product.price,
+      image: urlForThumbnail(product.image),
+      quantity
+
+    }  
+
+    dispatch(setAddToCart(newData));
+    enqueueSnackbar(`${product.name} added to the cart`, { variant: 'success' });
+    
+  }
 
   return (
     <>
@@ -57,7 +89,7 @@ const ProductDetails = (props) => {
                 />
               )}
             </Grid>
-            <Grid xs={12} md={3}>
+            <Grid item xs={12} md={3}>
               <List>
                 <ListItem>
                   <Typography component="h5" variant="h5">
@@ -105,7 +137,7 @@ const ProductDetails = (props) => {
                     </Grid>
                   </ListItem>
                   <ListItem>
-                    <Button fullWidth variant="contained">
+                    <Button fullWidth variant="contained" onClick={handleAddToCard}>
                       Add to cart
                     </Button>
                   </ListItem>

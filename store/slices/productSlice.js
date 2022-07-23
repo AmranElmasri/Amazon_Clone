@@ -1,40 +1,49 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import client from "../../utils/client";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import client from '../../utils/client';
+import Cookies from 'js-cookie';
 
 const initialState = {
   isLoading: false,
   products: [],
   product: [],
   error: '',
-  darkMode: null
+  darkMode: null,
+  cartItems: Cookies.get('cartItems')
+    ? JSON.parse(Cookies.get('cartItems'))
+    : [],
+};
 
-}
-
-export const fetchProducts = createAsyncThunk('product/fetchProducts', async (_, thunkAPI) => {
-  const { rejectWithValue } = thunkAPI;
-  try {
-    const products = await client.fetch(`*[_type == "product"]`);
-    return products;
-  } catch (error) {
-    return rejectWithValue(error.message);
+export const fetchProducts = createAsyncThunk(
+  'product/fetchProducts',
+  async (_, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const products = await client.fetch(`*[_type == "product"]`);
+      return products;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-})
+);
 
-
-
-export const getProductDetails = createAsyncThunk('product/getProductDetails', async (slug, thunkAPI) => {
-  const { rejectWithValue } = thunkAPI;
-  try {
-    const product = await client.fetch(`*[_type == "product" && slug.current == $slug][0]`, { slug });
-    return product;
-  } catch (error) {
-    return rejectWithValue(error.message);
+export const getProductDetails = createAsyncThunk(
+  'product/getProductDetails',
+  async (slug, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    try {
+      const product = await client.fetch(
+        `*[_type == "product" && slug.current == $slug][0]`,
+        { slug }
+      );
+      return product;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-})
-
+);
 
 export const productSlice = createSlice({
-  name: "product",
+  name: 'product',
   initialState,
   extraReducers: (builder) => {
     // get products
@@ -48,9 +57,7 @@ export const productSlice = createSlice({
       }),
       builder.addCase(fetchProducts.rejected, (state, action) => {
         state.isLoading = false;
-        state.products = [],
-          state.error = action.payload;
-
+        (state.products = []), (state.error = action.payload);
       }),
       // get product details
       builder.addCase(getProductDetails.pending, (state) => {
@@ -63,18 +70,29 @@ export const productSlice = createSlice({
       }),
       builder.addCase(getProductDetails.rejected, (state, action) => {
         state.isLoading = false;
-        state.product = [],
-          state.error = action.payload;
-
-      })
+        (state.product = []), (state.error = action.payload);
+      });
   },
   reducers: {
     setDarkMode: (state, action) => {
       state.darkMode = action.payload;
       localStorage.setItem('darkMode', JSON.stringify(state.darkMode));
-    }
-  }
-})
+    },
+    setAddToCart: (state, action) => {
+      const newItem = action.payload;
+      const existItem = state.cartItems.find(
+        (item) => item._key === newItem._key
+      );
+      const newCartItems = existItem
+        ? state.cartItems.map((item) =>
+            item._key === newItem._key ? newItem : item
+          )
+        : [...state.cartItems, newItem];
+        Cookies.set('cartItems', JSON.stringify(newCartItems));
+      state.cartItems = newCartItems;
+    },
+  },
+});
 
-export const { setDarkMode } = productSlice.actions;
-export default productSlice.reducer;    
+export const { setDarkMode, setAddToCart } = productSlice.actions;
+export default productSlice.reducer;

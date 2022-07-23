@@ -91,8 +91,13 @@ export const productSlice = createSlice({
         Cookies.set('cartItems', JSON.stringify(newCartItems));
       state.cartItems = newCartItems;
     },
+    setRemoveCartItem: (state, action) => {
+      const newCartItems = state.cartItems.filter((item) => item.slug !== action.payload);
+      Cookies.set('cartItems', JSON.stringify(newCartItems));
+      state.cartItems = newCartItems;
+    }
   },
 });
 
-export const { setDarkMode, setAddToCart } = productSlice.actions;
+export const { setDarkMode, setAddToCart, setRemoveCartItem } = productSlice.actions;
 export default productSlice.reducer;

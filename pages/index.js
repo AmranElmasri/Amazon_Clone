@@ -1,6 +1,4 @@
 import { Alert, CircularProgress, Grid, Typography } from '@mui/material';
-import Head from 'next/head';
-import Image from 'next/image';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../components/ProductItem/ProductItem';

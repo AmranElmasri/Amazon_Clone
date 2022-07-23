@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProductDetails, setAddToCart } from '../../store/slices/productSlice';
 import { urlFor, urlForThumbnail } from '../../utils/image';
 import { useSnackbar } from 'notistack';
+import { Router } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
 
 export const getServerSideProps = (context) => {
@@ -31,6 +33,7 @@ const ProductDetails = (props) => {
   const { product, isLoading, error, cartItems } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const Router = useRouter();
   
   useEffect(() => {
     dispatch(getProductDetails(slug));
@@ -41,7 +44,7 @@ const ProductDetails = (props) => {
     const existItem = cartItems.find((item) => item._id === product._id);
     const quantity = existItem ? existItem.quantity +1 : 1 ;
 
-    const {data} = await axios.get(`/product/${product._id}`);
+    const {data} = await axios.get(`/api/products/${product._id}`);
 
     if(data.countInStock < quantity){
       enqueueSnackbar('Sorry. Product is out of stock', { variant: 'error' });
@@ -61,7 +64,7 @@ const ProductDetails = (props) => {
 
     dispatch(setAddToCart(newData));
     enqueueSnackbar(`${product.name} added to the cart`, { variant: 'success' });
-    
+    Router.push(`/cart`);
   }
 
   return (

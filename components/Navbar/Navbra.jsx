@@ -3,6 +3,8 @@ import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDarkMode } from '../../store/slices/productSlice';
+import classes from '../../utils/classes'
+
 
 const Navbra = () => {
   const { darkMode } = useSelector((state) => state.product);
@@ -20,9 +22,9 @@ const Navbra = () => {
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#203040' }}>
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <Toolbar sx={classes.toolbar}>
         <Link href="/">
-          <a>
+          <a className='amazonLogo'>
             <Typography
               component="h6"
               variant="h6"

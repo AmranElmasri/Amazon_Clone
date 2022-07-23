@@ -1,15 +1,7 @@
 import React from 'react';
 import { createTheme } from '@mui/material/styles';
 import Head from 'next/head';
-import {
-  AppBar,
-  Container,
-  CssBaseline,
-  ThemeProvider,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import Link from 'next/link';
+import { Container, CssBaseline, ThemeProvider } from '@mui/material';
 import Navbra from '../Navbar/Navbra';
 import Footer from '../Footer/Footer';
 import { useSelector } from 'react-redux';
@@ -17,20 +9,7 @@ import { useSelector } from 'react-redux';
 const Layout = ({ title, description, children }) => {
   const { darkMode } = useSelector((state) => state.product);
 
-
   const theme = createTheme({
-    // typography: {
-    //   h1: {
-    //     fontSize: '1.6rem',
-    //     fontWeight: 400,
-    //     margin: '1rem 0',
-    //   },
-    //   h2: {
-    //     fontSize: '1.4rem',
-    //     fontWeight: 400,
-    //     margin: '1rem 0',
-    //   },
-    // },
     palette: {
       mode: darkMode ? 'dark' : 'light',
       primary: {

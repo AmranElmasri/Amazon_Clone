@@ -26,7 +26,7 @@ export default function RegisterScreen() {
   }) => {};
   return (
     <Form onSubmit={handleSubmit(submitHandler)}>
-      <Typography component="h1" variant="h1">
+      <Typography component="h3" variant="h3" textAlign={'center'}>
         Register
       </Typography>
       <List>
@@ -153,9 +153,9 @@ export default function RegisterScreen() {
           </Button>
         </ListItem>
         <ListItem>
-          Already have an account?{' '}
+          Already have an account ?{' '}
           <NextLink href={'/login'} passHref>
-            <Link>Login</Link>
+            <Link sx={{marginLeft: "0.5rem"}}>Login</Link>
           </NextLink>
         </ListItem>
       </List>

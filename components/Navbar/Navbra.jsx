@@ -14,6 +14,7 @@ import { setDarkMode } from '../../store/slices/productSlice';
 import classes from '../../utils/classes';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useRouter } from 'next/router';
+import LoginIcon from '@mui/icons-material/Login';
 
 const Navbra = () => {
   const { darkMode, cartItems } = useSelector((state) => state.product);
@@ -35,7 +36,7 @@ const Navbra = () => {
     setRender(true);
   }, []);
 
-  const badge = () => (
+  const badgeCart = () => (
     <IconButton aria-label="cart" onClick={() => router.push('/cart')}>
       <Badge badgeContent={cartItems.length} color="secondary">
         <ShoppingCartIcon color="primary" />
@@ -62,11 +63,14 @@ const Navbra = () => {
             marginRight: '2rem',
             display: 'flex',
             justifyContent: 'space-between',
-            width: '10%',
+            width: '15%',
           }}
         >
-          {render && badge()}
+          {render && badgeCart()}
           <Switch checked={darkMode} onChange={handleDarkeModeChange}></Switch>
+          <IconButton aria-label="login" onClick={() => router.push('/login')}>
+            <LoginIcon color="primary"/>
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>

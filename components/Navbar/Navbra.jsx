@@ -1,14 +1,25 @@
-import { AppBar, Box, Switch, Toolbar, Typography } from '@mui/material';
+import {
+  AppBar,
+  Badge,
+  Box,
+  IconButton,
+  Switch,
+  Toolbar,
+  Typography,
+} from '@mui/material';
 import Link from 'next/link';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setDarkMode } from '../../store/slices/productSlice';
-import classes from '../../utils/classes'
-
+import classes from '../../utils/classes';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useRouter } from 'next/router';
 
 const Navbra = () => {
-  const { darkMode } = useSelector((state) => state.product);
+  const { darkMode, cartItems } = useSelector((state) => state.product);
   const dispatch = useDispatch();
+  const router = useRouter();
+  const [render, setRender] = useState(false);
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem('darkMode'))) {
@@ -20,11 +31,23 @@ const Navbra = () => {
     dispatch(setDarkMode(!darkMode));
   };
 
+  useEffect(() => {
+    setRender(true);
+  }, []);
+
+  const badge = () => (
+    <IconButton aria-label="cart" onClick={() => router.push('/cart')}>
+      <Badge badgeContent={cartItems.length} color="secondary">
+        <ShoppingCartIcon color="primary" />
+      </Badge>
+    </IconButton>
+  );
+
   return (
     <AppBar position="static" sx={{ backgroundColor: '#203040' }}>
       <Toolbar sx={classes.toolbar}>
         <Link href="/">
-          <a className='amazonLogo'>
+          <a className="amazonLogo">
             <Typography
               component="h6"
               variant="h6"
@@ -34,7 +57,15 @@ const Navbra = () => {
             </Typography>
           </a>
         </Link>
-        <Box>
+        <Box
+          sx={{
+            marginRight: '2rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '10%',
+          }}
+        >
+          {render && badge()}
           <Switch checked={darkMode} onChange={handleDarkeModeChange}></Switch>
         </Box>
       </Toolbar>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import NextLink from 'next/link';
 import Form from '../components/Form/Form';
@@ -10,22 +10,48 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserLogin } from '../store/slices/userSlice';
 
 export default function RegisterScreen() {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
+
+  const { handleSubmit, control, formState: { errors }} = useForm();
+  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const {userInfo} = useSelector((state) => state.user)
+
+  useEffect(() => {
+    if(userInfo){
+      router.push('/');  //to prevent the logined user to show the register page
+    }
+  }, [router, userInfo]);
 
   const submitHandler = async ({
     name,
     email,
     password,
     confirmPassword,
-  }) => {};
+  }) => {
+    if(password !== confirmPassword) {
+      enqueueSnackbar("Passwords don't match", { variant: 'error' });
+      return;
+    }
+    try {
+      const {data} = await axios.post(`/api/users/register`, {name, email, password});
+      dispatch(setUserLogin(data));
+      router.push('/');
+    } catch (error) {
+      enqueueSnackbar(error, { variant: 'error' });
+    }
+  };
+
+
   return (
-    <Form onSubmit={handleSubmit(submitHandler)}>
+    <form onSubmit={handleSubmit(submitHandler)} style={{maxWidth: "800px", margin: "0 auto"}}>
       <Typography component="h3" variant="h3" textAlign={'center'}>
         Register
       </Typography>
@@ -159,6 +185,6 @@ export default function RegisterScreen() {
           </NextLink>
         </ListItem>
       </List>
-    </Form>
+    </form>
   );
 }

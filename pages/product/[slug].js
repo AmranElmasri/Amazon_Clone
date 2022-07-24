@@ -39,7 +39,7 @@ const ProductDetails = (props) => {
     dispatch(getProductDetails(slug));
   }, [dispatch, slug]);
 
-  const handleAddToCard = async () => {
+  const handleAddToCart = async () => {
     
     const existItem = cartItems.find((item) => item._id === product._id);
     const quantity = existItem ? existItem.quantity +1 : 1 ;
@@ -140,7 +140,7 @@ const ProductDetails = (props) => {
                     </Grid>
                   </ListItem>
                   <ListItem>
-                    <Button fullWidth variant="contained" onClick={handleAddToCard}>
+                    <Button fullWidth variant="contained" onClick={handleAddToCart}>
                       Add to cart
                     </Button>
                   </ListItem>

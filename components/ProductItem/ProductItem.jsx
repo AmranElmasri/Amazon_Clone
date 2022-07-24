@@ -53,7 +53,7 @@ const ProductItem = ({ product }) => {
   }
 
   return (
-    <Card elevation={2}>
+    <Card elevation={2} sx={{borderRadius: "10px"}}>
       <Link href={`/product/${product.slug.current}`} passHref>
         <CardActionArea>
           <CardMedia

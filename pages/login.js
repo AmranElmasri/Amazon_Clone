@@ -1,8 +1,7 @@
 import React from 'react';
-import Layout from '../components/Layout';
 import { useForm, Controller } from 'react-hook-form';
 import NextLink from 'next/link';
-import Form from '../components/Form';
+import Form from '../components/Form/Form';
 import {
   Button,
   Link,
@@ -21,14 +20,13 @@ export default function LoginScreen() {
 
   const submitHandler = async ({ email, password }) => {};
   return (
-    <Layout title="Login">
-      <Form onSubmit={handleSubmit(submitHandler)}>
-        <Typography component="h1" variant="h1">
+      <form onSubmit={handleSubmit(submitHandler)} style={{maxWidth: "800px", margin:"0 auto"}}>
+        <Typography component="h3" variant="h3" textAlign={"center"}>
           Login
         </Typography>
         <List>
           <ListItem>
-            <Controller
+            <Controller 
               name="email"
               control={control}
               defaultValue=""
@@ -91,13 +89,12 @@ export default function LoginScreen() {
             </Button>
           </ListItem>
           <ListItem>
-            Do not have an account?{' '}
+            Do not have an account ?{' '}
             <NextLink href={'/register'} passHref>
-              <Link>Register</Link>
+              <Link sx={{marginLeft: "0.5rem"}}>Register</Link>
             </NextLink>
           </ListItem>
         </List>
-      </Form>
-    </Layout>
+      </form>
   );
 }

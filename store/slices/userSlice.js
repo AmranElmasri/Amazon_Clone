@@ -15,8 +15,13 @@ export const userSlice = createSlice({
       state.userInfo = action.payload;
       Cookies.set('userInfo', JSON.stringify(action.payload));
     },
+    setUserLogout: (state, action) => {
+      state.userInfo = null;
+      Cookies.remove('userInfo');
+      Cookies.remove('cartItems');
+    },
   },
 });
 
-export const { setUserLogin } = userSlice.actions;
+export const { setUserLogin, setUserLogout } = userSlice.actions;
 export default userSlice.reducer;

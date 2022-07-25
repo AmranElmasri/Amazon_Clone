@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import NextLink from 'next/link';
 import Form from '../components/Form/Form';
@@ -10,6 +10,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserLogin } from '../store/slices/userSlice';
+import { getError } from '../utils/error';
 
 export default function LoginScreen() {
   const {
@@ -18,7 +24,26 @@ export default function LoginScreen() {
     formState: { errors },
   } = useForm();
 
-  const submitHandler = async ({ email, password }) => {};
+  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const {userInfo} = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if(userInfo){
+      router.push('/');
+    }
+  },[router, userInfo])
+
+  const submitHandler = async ({ email, password }) => {
+    try {
+      const {data} = await axios.post(`/api/users/login`, {email,password});
+      dispatch(setUserLogin(data));
+      router.push('/')
+    } catch (error) {
+      enqueueSnackbar(getError(error), {variant: 'error'})
+    }
+  };
   return (
       <form onSubmit={handleSubmit(submitHandler)} style={{maxWidth: "800px", margin:"0 auto"}}>
         <Typography component="h3" variant="h3" textAlign={"center"}>

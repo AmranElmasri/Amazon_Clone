@@ -15,6 +15,7 @@ import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserLogin } from '../store/slices/userSlice';
+import { getError } from '../utils/error';
 
 export default function RegisterScreen() {
 
@@ -45,7 +46,7 @@ export default function RegisterScreen() {
       dispatch(setUserLogin(data));
       router.push('/');
     } catch (error) {
-      enqueueSnackbar(error, { variant: 'error' });
+      enqueueSnackbar(getError(error), { variant: 'error' });
     }
   };
 

@@ -1,7 +1,6 @@
 const classes = {
-    toolbar: {
-        justifyContent: 'space-between',
-    },
-
-}
+  toolbar: {
+    justifyContent: 'space-between',
+  },
+};
 export default classes;

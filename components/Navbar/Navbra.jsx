@@ -14,13 +14,13 @@ import {
 import NextLink from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setDarkMode } from '../../store/slices/productSlice';
+import { setDarkMode, setLogout } from '../../store/slices/productSlice';
 import classes from '../../utils/classes';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useRouter } from 'next/router';
-import LoginIcon from '@mui/icons-material/Login';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { setUserLogout } from '../../store/slices/userSlice';
+import Cookies from 'js-cookie';
 
 const Navbra = () => {
   const { darkMode, cartItems } = useSelector((state) => state.product);
@@ -65,6 +65,11 @@ const Navbra = () => {
 
   const handleLogout = () => {
     dispatch(setUserLogout());
+    dispatch(setLogout());  //To remove all data from cartItems and shippingAddress instantaneously
+    Cookies.remove('userInfo');
+    Cookies.remove('cartItems');
+    Cookies.remove('shippingAddress');
+    router.push('/');
   };
 
   return (

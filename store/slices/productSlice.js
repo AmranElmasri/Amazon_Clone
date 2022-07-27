@@ -11,6 +11,9 @@ const initialState = {
   cartItems: Cookies.get('cartItems')
     ? JSON.parse(Cookies.get('cartItems'))
     : [],
+  shippingAddress: Cookies.get('shippingAddress')
+    ? JSON.parse(Cookies.get('shippingAddress'))
+    : {},
 };
 
 export const fetchProducts = createAsyncThunk(
@@ -57,7 +60,8 @@ export const productSlice = createSlice({
       }),
       builder.addCase(fetchProducts.rejected, (state, action) => {
         state.isLoading = false;
-        (state.products = []), (state.error = action.payload);
+        state.products = [];
+        state.error = action.payload;
       }),
       // get product details
       builder.addCase(getProductDetails.pending, (state) => {
@@ -70,7 +74,8 @@ export const productSlice = createSlice({
       }),
       builder.addCase(getProductDetails.rejected, (state, action) => {
         state.isLoading = false;
-        (state.product = []), (state.error = action.payload);
+        state.product = [];
+        state.error = action.payload;
       });
   },
   reducers: {
@@ -88,16 +93,32 @@ export const productSlice = createSlice({
             item._key === newItem._key ? newItem : item
           )
         : [...state.cartItems, newItem];
-        Cookies.set('cartItems', JSON.stringify(newCartItems));
+      Cookies.set('cartItems', JSON.stringify(newCartItems));
       state.cartItems = newCartItems;
     },
     setRemoveCartItem: (state, action) => {
-      const newCartItems = state.cartItems.filter((item) => item.slug !== action.payload);
+      const newCartItems = state.cartItems.filter(
+        (item) => item.slug !== action.payload
+      );
       Cookies.set('cartItems', JSON.stringify(newCartItems));
       state.cartItems = newCartItems;
+    },
+    setShippingAddress: (state, action) => {
+      state.shippingAddress = action.payload;
+      Cookies.set('shippingAddress', JSON.stringify(action.payload));
+    },
+    setLogout: (state) => {
+      state.cartItems = [];
+      state.shippingAddress = {};
     }
   },
 });
 
-export const { setDarkMode, setAddToCart, setRemoveCartItem } = productSlice.actions;
+export const {
+  setDarkMode,
+  setAddToCart,
+  setRemoveCartItem,
+  setShippingAddress,
+  setLogout
+} = productSlice.actions;
 export default productSlice.reducer;

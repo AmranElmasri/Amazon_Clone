@@ -24,11 +24,13 @@ import axios from 'axios';
 import { setAddToCart, setRemoveCartItem } from '../store/slices/productSlice';
 import { useSnackbar } from 'notistack';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 const CartScreen = () => {
   const { cartItems } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const handleUpdateQuantity = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._key}`);
@@ -148,7 +150,7 @@ const CartScreen = () => {
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Button fullWidth color="primary" variant="contained">
+                  <Button fullWidth color="primary" variant="contained" onClick={() => router.push('/shipping ')}> 
                     Checkout
                   </Button>
                 </ListItem>

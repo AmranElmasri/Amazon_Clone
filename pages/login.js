@@ -26,6 +26,7 @@ export default function LoginScreen() {
 
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
+  const {redirect} = router.query;
   const dispatch = useDispatch();
   const {userInfo} = useSelector((state) => state.user);
 
@@ -39,7 +40,7 @@ export default function LoginScreen() {
     try {
       const {data} = await axios.post(`/api/users/login`, {email,password});
       dispatch(setUserLogin(data));
-      router.push('/')
+      router.push(redirect || '/')
     } catch (error) {
       enqueueSnackbar(getError(error), {variant: 'error'})
     }
@@ -115,7 +116,7 @@ export default function LoginScreen() {
           </ListItem>
           <ListItem>
             Do not have an account ?{' '}
-            <NextLink href={'/register'} passHref>
+            <NextLink href={`/register?redirect=${redirect || '/'}`} passHref>
               <Link sx={{marginLeft: "0.5rem"}}>Register</Link>
             </NextLink>
           </ListItem>

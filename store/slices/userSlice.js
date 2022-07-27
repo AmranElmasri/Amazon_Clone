@@ -17,8 +17,6 @@ export const userSlice = createSlice({
     },
     setUserLogout: (state, action) => {
       state.userInfo = null;
-      Cookies.remove('userInfo');
-      Cookies.remove('cartItems');
     },
   },
 });

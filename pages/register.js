@@ -22,14 +22,15 @@ export default function RegisterScreen() {
   const { handleSubmit, control, formState: { errors }} = useForm();
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
+  const {redirect} = router.query;
   const dispatch = useDispatch();
   const {userInfo} = useSelector((state) => state.user)
 
   useEffect(() => {
     if(userInfo){
-      router.push('/');  //to prevent the logined user to show the register page
+      router.push(redirect || '/');  //to prevent the logined user to show the register page
     }
-  }, [router, userInfo]);
+  }, [router, userInfo, redirect]);
 
   const submitHandler = async ({
     name,
@@ -44,7 +45,7 @@ export default function RegisterScreen() {
     try {
       const {data} = await axios.post(`/api/users/register`, {name, email, password});
       dispatch(setUserLogin(data));
-      router.push('/');
+      router.push(redirect || '/');
     } catch (error) {
       enqueueSnackbar(getError(error), { variant: 'error' });
     }
@@ -181,7 +182,7 @@ export default function RegisterScreen() {
         </ListItem>
         <ListItem>
           Already have an account ?{' '}
-          <NextLink href={'/login'} passHref>
+          <NextLink href={`/login?redirect=${redirect || '/'}`} passHref>
             <Link sx={{marginLeft: "0.5rem"}}>Login</Link>
           </NextLink>
         </ListItem>

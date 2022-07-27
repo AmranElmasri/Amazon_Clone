@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getProductDetails, setAddToCart } from '../../store/slices/productSlice';
 import { urlFor, urlForThumbnail } from '../../utils/image';
 import { useSnackbar } from 'notistack';
-import { Router } from '@mui/icons-material';
 import { useRouter } from 'next/router';
 
 
@@ -33,16 +32,15 @@ const ProductDetails = (props) => {
   const { product, isLoading, error, cartItems } = useSelector((state) => state.product);
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const Router = useRouter();
+  const router = useRouter();
   
   useEffect(() => {
     dispatch(getProductDetails(slug));
   }, [dispatch, slug]);
 
   const handleAddToCart = async () => {
-    
     const existItem = cartItems.find((item) => item._id === product._id);
-    const quantity = existItem ? existItem.quantity +1 : 1 ;
+    const quantity = existItem ? existItem.quantity + 1 : 1 ;
 
     const {data} = await axios.get(`/api/products/${product._id}`);
 
@@ -64,7 +62,7 @@ const ProductDetails = (props) => {
 
     dispatch(setAddToCart(newData));
     enqueueSnackbar(`${product.name} added to the cart`, { variant: 'success' });
-    Router.push(`/cart`);
+    router.push(`/cart`);
   }
 
   return (

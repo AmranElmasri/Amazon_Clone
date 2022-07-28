@@ -5,7 +5,7 @@ import { store } from '../store/store';
 import { Provider } from 'react-redux';
 import Layout from '../components/Layout/Layout';
 import { SnackbarProvider } from 'notistack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const clientSideEmotionCache = createCache({ key: 'css' });
 

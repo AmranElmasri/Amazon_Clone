@@ -117,6 +117,10 @@ export const productSlice = createSlice({
     setPaymentMethodAction: (state, action) => {
       state.paymentMethod = action.payload;
     },
+    setClearCart: (state) => {
+      state.cartItems = [];
+
+    }
   },
 });
 
@@ -127,5 +131,6 @@ export const {
   setShippingAddress,
   setLogout,
   setPaymentMethodAction,
+  setClearCart,
 } = productSlice.actions;
 export default productSlice.reducer;

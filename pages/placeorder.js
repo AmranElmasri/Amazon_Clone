@@ -82,6 +82,8 @@ function PlaceOrderScreen() {
       );
       dispatch(setClearCart());
       jsCookie.remove('cartItems');
+      jsCookie.remove('shippingAddress');
+      jsCookie.remove('paymentMethod');
       setLoading(false);
       router.push(`/order/${data}`);
     } catch (err) {
@@ -92,16 +94,25 @@ function PlaceOrderScreen() {
   return (
     <>
       <CheckoutWizard activeStep={3}></CheckoutWizard>
-      <Typography component="h3" variant="h3" textAlign={'center'} marginTop="2rem"> 
+      <Typography
+        component="h3"
+        variant="h3"
+        textAlign={'center'}
+        marginTop="2rem"
+      >
         Place Order
       </Typography>
 
       <Grid container spacing={1}>
         <Grid item xs={12} md={9}>
-          <Card sx={classes.section}>
+          <Card sx={classes.section} elevation={3}>
             <List>
               <ListItem>
-                <Typography component="h4" variant="h4">
+                <Typography
+                  component="h4"
+                  variant="h4"
+                  sx={{ fontSize: '1.6rem', fontWeight: 400, margin: '1rem 0' }}
+                >
                   Shipping Address
                 </Typography>
               </ListItem>
@@ -121,10 +132,14 @@ function PlaceOrderScreen() {
               </ListItem>
             </List>
           </Card>
-          <Card sx={classes.section}>
+          <Card sx={classes.section} elevation={3}>
             <List>
               <ListItem>
-                <Typography component="h4" variant="h4">
+                <Typography
+                  component="h4"
+                  variant="h4"
+                  sx={{ fontSize: '1.6rem', fontWeight: 400, margin: '1rem 0' }}
+                >
                   Payment Method
                 </Typography>
               </ListItem>
@@ -140,10 +155,14 @@ function PlaceOrderScreen() {
               </ListItem>
             </List>
           </Card>
-          <Card sx={classes.section}>
+          <Card sx={classes.section} elevation={3}>
             <List>
               <ListItem>
-                <Typography component="h4" variant="h4">
+                <Typography
+                  component="h4"
+                  variant="h4"
+                  sx={{ fontSize: '1.6rem', fontWeight: 400, margin: '1rem 0' }}
+                >
                   Order Items
                 </Typography>
               </ListItem>
@@ -196,10 +215,12 @@ function PlaceOrderScreen() {
           </Card>
         </Grid>
         <Grid item xs={12} md={3}>
-          <Card sx={classes.section}>
+          <Card sx={classes.section} elevation={3}>
             <List>
               <ListItem>
-                <Typography component="h4" variant="h4">Order Summary</Typography>
+                <Typography component="h4" variant="h4">
+                  Order Summary
+                </Typography>
               </ListItem>
               <ListItem>
                 <Grid container>

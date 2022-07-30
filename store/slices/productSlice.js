@@ -18,6 +18,7 @@ const initialState = {
     ? Cookies.get('paymentMethod')
     : '',
   orderDetails: [],
+  orders: []
 };
 
 export const fetchProducts = createAsyncThunk(
@@ -126,6 +127,9 @@ export const productSlice = createSlice({
     setOrderDetails: (state, action) => {
       state.orderDetails = action.payload;
     },
+    setFetchOrders: (state, action) => {
+      state.orders = action.payload;
+    }
   },
 });
 
@@ -138,5 +142,6 @@ export const {
   setPaymentMethodAction,
   setClearCart,
   setOrderDetails,
+  setFetchOrders
 } = productSlice.actions;
 export default productSlice.reducer;

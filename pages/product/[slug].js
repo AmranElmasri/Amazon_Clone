@@ -80,10 +80,10 @@ const ProductDetails = (props) => {
           </Box>
           <Grid container spacing={1}>
             <Grid item xs={12} md={6}>
-              {product.image && (
+              {product?.image && (
                 <Image
-                  src={urlFor(product.image)}
-                  alt={product.name}
+                  src={urlFor(product?.image)}
+                  alt={product?.name}
                   layout="responsive"
                   width={640}
                   height={640}
@@ -94,19 +94,19 @@ const ProductDetails = (props) => {
               <List>
                 <ListItem>
                   <Typography component="h5" variant="h5">
-                    {product.name}
+                    {product?.name}
                   </Typography>
                 </ListItem>
-                <ListItem>Category: {product.category}</ListItem>
-                <ListItem>Brand: {product.brand}</ListItem>
+                <ListItem>Category: {product?.category}</ListItem>
+                <ListItem>Brand: {product?.brand}</ListItem>
                 <ListItem>
-                  <Rating value={product.rating} readOnly></Rating>
+                  <Rating value={product?.rating} readOnly></Rating>
                   <Typography sx={{ fontSize: '15px', marginLeft: '10px' }}>
-                    ({product.numReviews} reviews)
+                    ({product?.numReviews} reviews)
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Typography>Description: {product.description}</Typography>
+                  <Typography>Description: {product?.description}</Typography>
                 </ListItem>
               </List>
             </Grid>
@@ -119,7 +119,7 @@ const ProductDetails = (props) => {
                         <Typography>Price</Typography>
                       </Grid>
                       <Grid item xs={6}>
-                        <Typography>${product.price}</Typography>
+                        <Typography>${product?.price}</Typography>
                       </Grid>
                     </Grid>
                   </ListItem>
@@ -130,7 +130,7 @@ const ProductDetails = (props) => {
                       </Grid>
                       <Grid item xs={6}>
                         <Typography>
-                          {product.countInStock > 0
+                          {product?.countInStock > 0
                             ? 'In stock'
                             : 'Unavailable'}
                         </Typography>

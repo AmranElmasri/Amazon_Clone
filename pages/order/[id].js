@@ -39,7 +39,7 @@ function OrderScreen({ params }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [successPay, setSuccessPay] = useState(false)
+  const [successPay, setSuccessPay] = useState(false);
 
   const {
     shippingAddress,
@@ -76,7 +76,11 @@ function OrderScreen({ params }) {
         enqueueSnackbar(getError(error), { variant: 'error' });
       }
     };
-    if (!orderDetails._id || successPay || (orderDetails._id && orderDetails._id !== orderId) ) {
+    if (
+      !orderDetails._id ||
+      successPay ||
+      (orderDetails._id && orderDetails._id !== orderId)
+    ) {
       getOrderDetails(orderId);
       if (successPay) {
         setSuccessPay(false);
@@ -99,7 +103,16 @@ function OrderScreen({ params }) {
 
       loadPaypalScript();
     }
-  }, [dispatch, enqueueSnackbar, orderDetails, orderId, paypalDispatch, router, successPay, userInfo]);
+  }, [
+    dispatch,
+    enqueueSnackbar,
+    orderDetails,
+    orderId,
+    paypalDispatch,
+    router,
+    successPay,
+    userInfo,
+  ]);
 
   function createOrder(data, actions) {
     return actions.order
@@ -319,7 +332,7 @@ function OrderScreen({ params }) {
                     {isPending ? (
                       <CircularProgress />
                     ) : (
-                      <Box sx={{width: "100%"}}>
+                      <Box sx={{ width: '100%' }}>
                         <PayPalButtons
                           createOrder={createOrder}
                           onApprove={onApprove}

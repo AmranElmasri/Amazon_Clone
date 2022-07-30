@@ -16,8 +16,8 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFetchOrders } from '../../store/slices/productSlice';
-import { getError } from '../../utils/error';
+import { setFetchOrders } from '../store/slices/productSlice';
+import { getError } from '../utils/error';
 
 function OrderHistoryScreen() {
   const dispatch = useDispatch();

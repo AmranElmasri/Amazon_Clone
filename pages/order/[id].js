@@ -1,5 +1,6 @@
 import {
   Alert,
+  Box,
   Card,
   CircularProgress,
   Grid,
@@ -25,6 +26,7 @@ import { setOrderDetails } from '../../store/slices/productSlice';
 import axios from 'axios';
 import { getError } from '../../utils/error';
 import { useSnackbar } from 'notistack';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 
 function OrderScreen({ params }) {
   const { id: orderId } = params;
@@ -37,6 +39,7 @@ function OrderScreen({ params }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successPay, setSuccessPay] = useState(false)
 
   const {
     shippingAddress,
@@ -51,6 +54,8 @@ function OrderScreen({ params }) {
     isDelivered,
     deliveredAt,
   } = orderDetails;
+
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
   useEffect(() => {
     if (!userInfo) {
@@ -67,12 +72,75 @@ function OrderScreen({ params }) {
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
+        setError(getError(error));
+        enqueueSnackbar(getError(error), { variant: 'error' });
+      }
+    };
+    if (!orderDetails._id || successPay || (orderDetails._id && orderDetails._id !== orderId) ) {
+      getOrderDetails(orderId);
+      if (successPay) {
+        setSuccessPay(false);
+      }
+    } else {
+      const loadPaypalScript = async () => {
+        const { data: clientId } = await axios.get('/api/keys/paypal', {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        });
+
+        paypalDispatch({
+          type: 'resetOptions',
+          value: {
+            'client-id': clientId,
+            currency: 'USD',
+          },
+        });
+        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+      };
+
+      loadPaypalScript();
+    }
+  }, [dispatch, enqueueSnackbar, orderDetails, orderId, paypalDispatch, router, successPay, userInfo]);
+
+  function createOrder(data, actions) {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            amount: { value: totalPrice },
+          },
+        ],
+      })
+      .then((orderID) => {
+        return orderID;
+      });
+  }
+
+  function onApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
+      try {
+        setIsLoading(true);
+        const { data } = await axios.put(
+          `/api/orders/${orderDetails._id}/pay`,
+          details,
+          {
+            headers: { authorization: `Bearer ${userInfo.token}` },
+          }
+        );
+        setIsLoading(false);
+        setSuccessPay(true);
+        enqueueSnackbar('Order is paid', { variant: 'success' });
+      } catch (err) {
+        setIsLoading(false);
         setError(getError(err));
         enqueueSnackbar(getError(err), { variant: 'error' });
       }
-    };
-    getOrderDetails(orderId);
-  }, [dispatch, enqueueSnackbar, orderId, router, userInfo]);
+    });
+  }
+
+  function onError(err) {
+    enqueueSnackbar(getError(err), { variant: 'error' });
+  }
+
   return (
     <>
       <Typography
@@ -122,7 +190,15 @@ function OrderScreen({ params }) {
             <Card sx={classes.section} elevation={3}>
               <List>
                 <ListItem>
-                  <Typography component="h2" variant="h2"  sx={{ fontSize: '1.6rem', fontWeight: 400, margin: '1rem 0' }}>
+                  <Typography
+                    component="h2"
+                    variant="h2"
+                    sx={{
+                      fontSize: '1.6rem',
+                      fontWeight: 400,
+                      margin: '1rem 0',
+                    }}
+                  >
                     Payment Method
                   </Typography>
                 </ListItem>
@@ -192,7 +268,7 @@ function OrderScreen({ params }) {
             <Card sx={classes.section} elevation={3}>
               <List>
                 <ListItem>
-                  <Typography variant="h2">Order Summary</Typography>
+                  <Typography variant="h4">Order Summary</Typography>
                 </ListItem>
                 <ListItem>
                   <Grid container>
@@ -238,6 +314,21 @@ function OrderScreen({ params }) {
                     </Grid>
                   </Grid>
                 </ListItem>
+                {!isPaid && (
+                  <ListItem>
+                    {isPending ? (
+                      <CircularProgress />
+                    ) : (
+                      <Box sx={{width: "100%"}}>
+                        <PayPalButtons
+                          createOrder={createOrder}
+                          onApprove={onApprove}
+                          onError={onError}
+                        ></PayPalButtons>
+                      </Box>
+                    )}
+                  </ListItem>
+                )}
               </List>
             </Card>
           </Grid>

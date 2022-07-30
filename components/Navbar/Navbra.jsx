@@ -65,7 +65,7 @@ const Navbra = () => {
 
   const handleLogout = () => {
     dispatch(setUserLogout());
-    dispatch(setLogout());  //To remove all data from cartItems and shippingAddress instantaneously
+    dispatch(setLogout()); //To remove all data from cartItems and shippingAddress instantaneously
     Cookies.remove('userInfo');
     Cookies.remove('cartItems');
     Cookies.remove('shippingAddress');
@@ -121,6 +121,11 @@ const Navbra = () => {
               >
                 <MenuItem onClick={(e) => loginMenuCloseHandler(e, '/profile')}>
                   Profile
+                </MenuItem>
+                <MenuItem
+                  onClick={(e) => loginMenuCloseHandler(e, '/order/order-history')}
+                >
+                  Order History
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>

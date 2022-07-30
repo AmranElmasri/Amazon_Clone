@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import Layout from '../components/Layout/Layout';
 import { SnackbarProvider } from 'notistack';
 import { useEffect, useState } from 'react';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const clientSideEmotionCache = createCache({ key: 'css' });
 
@@ -21,9 +22,11 @@ function MyApp({ Component, pageProps, emotionCache = clientSideEmotionCache,}) 
     <CacheProvider value={emotionCache}>
       <SnackbarProvider anchorOrigin={{vertical: "top", horizontal: "center"}}>
         <Provider store={store}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <PayPalScriptProvider deferLoading={true}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </PayPalScriptProvider>
         </Provider>
       </SnackbarProvider>
     </CacheProvider>

@@ -123,7 +123,7 @@ const Navbra = () => {
                   Profile
                 </MenuItem>
                 <MenuItem
-                  onClick={(e) => loginMenuCloseHandler(e, '/order/order-history')}
+                  onClick={(e) => loginMenuCloseHandler(e, '/order-history')}
                 >
                   Order History
                 </MenuItem>

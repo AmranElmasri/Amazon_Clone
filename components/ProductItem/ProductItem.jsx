@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setAddToCart } from '../../store/slices/productSlice';
+import { setAddToCart, setRemoveCartItem } from '../../store/slices/productSlice';
 import { urlForThumbnail } from '../../utils/image';
 
 const ProductItem = ({ product }) => {
@@ -25,13 +25,12 @@ const ProductItem = ({ product }) => {
   const Router = useRouter();
 
   const handleAddToCart = async (product) => {
-    
     const existItem = cartItems.find((item) => item._id === product._id);
-    const quantity = existItem ? existItem.quantity +1 : 1 ;
+    const quantity = existItem ? existItem.quantity + 1 : 1;
 
-    const {data} = await axios.get(`/api/products/${product._id}`);
+    const { data } = await axios.get(`/api/products/${product._id}`);
 
-    if(data.countInStock < quantity){
+    if (data.countInStock < quantity) {
       enqueueSnackbar('Sorry. Product is out of stock', { variant: 'error' });
       return;
     }
@@ -43,17 +42,23 @@ const ProductItem = ({ product }) => {
       slug: product.slug.current,
       price: product.price,
       image: urlForThumbnail(product.image),
-      quantity
-
-    }  
+      quantity,
+    };
 
     dispatch(setAddToCart(newData));
-    enqueueSnackbar(`${product.name} added to the cart`, { variant: 'success' });
+    enqueueSnackbar(`${product.name} added to the cart`, {
+      variant: 'success',
+    });
     Router.push(`/cart`);
-  }
+  };
+
+  const removeFromCart = (slug) => {
+    dispatch(setRemoveCartItem(slug));
+
+  };
 
   return (
-    <Card elevation={2} sx={{borderRadius: "10px"}}>
+    <Card elevation={2} sx={{ borderRadius: '10px' }}>
       <Link href={`/product/${product.slug.current}`} passHref>
         <CardActionArea>
           <CardMedia
@@ -89,9 +94,22 @@ const ProductItem = ({ product }) => {
             size="small"
             color="primary"
             variant="outlined"
-            onClick={() => handleAddToCart(product)}
           >
-            Add to cart
+            {cartItems.find((cartItem) => cartItem._key === product._id) ? (
+              <Typography
+                variant="inherit"
+                onClick={() => removeFromCart(product.slug.current)}
+              >
+                remove from cart
+              </Typography>
+            ) : (
+              <Typography
+                variant="inherit"
+                onClick={() => handleAddToCart(product)}
+              >
+                add to cart
+              </Typography>
+            )}
           </Button>
         </Box>
         <Link href={`/product/${product.slug.current}`}>
